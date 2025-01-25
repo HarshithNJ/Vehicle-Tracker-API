@@ -3,6 +3,7 @@ package org.vehicle_tracker.vehicle_tracker.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class vehicleService {
             }
         }
         repository.saveAll(vehicles);
-        
+
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("success", "Vehicle Added Successfully");
         map.put("Data", vehicles);
@@ -71,7 +72,41 @@ public class vehicleService {
             return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
         }else{
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("success", "All Vehicles");
+            map.put("success", "All Vehicles Data Fetched Successfully");
+            map.put("Data", li);
+
+            return new ResponseEntity<Object>(map, HttpStatus.FOUND);
+        }
+    }
+
+    public ResponseEntity<Object> getVehicleByVehicleID(long vehicleID) {
+        Optional<vehicle> op = repository.findByVehicleID(vehicleID);
+
+        if(op.isPresent()){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("success", "Vehicle Data Fetched Successfully");
+            map.put("Data", op.get());
+
+            return new ResponseEntity<Object>(map, HttpStatus.FOUND);
+        }else{
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("error","Vehicle Not Found with the Vehicle ID : " + vehicleID);
+
+            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Object> getVehicleByModel(String model) {
+        List<vehicle> li = repository.findByModel(model);
+
+        if(li.isEmpty()){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("error","Vehicle Not Found with the Model Name : " + model);
+
+            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
+        }else{
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("success", "Vehicles Data Fetched Successfully");
             map.put("Data", li);
 
             return new ResponseEntity<Object>(map, HttpStatus.FOUND);
