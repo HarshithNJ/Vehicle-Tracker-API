@@ -5,6 +5,6 @@ import org.vehicle_tracker.vehicle_tracker.dto.vehicle;
 
 public interface vehicleRepository extends JpaRepository<vehicle, Integer> {
 
-    boolean existsByVehicleID(String vehicleID);
+    boolean existsByVehicleID(long vehicleID);
 
 }
