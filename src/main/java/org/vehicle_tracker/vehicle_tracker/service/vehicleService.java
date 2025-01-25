@@ -1,6 +1,7 @@
 package org.vehicle_tracker.vehicle_tracker.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class vehicleService {
 
         if(repository.existsByVehicleID(vehicle.getVehicleID())){
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("error","Vehicle Already Exists with the Vehicle ID" + vehicle.getVehicleID());
+            map.put("error","Vehicle Already Exists with the Vehicle ID : " + vehicle.getVehicleID());
 
             return new ResponseEntity<Object>(map, HttpStatus.NOT_ACCEPTABLE);
         }else{
@@ -31,6 +32,23 @@ public class vehicleService {
             map.put("Data", vehicle);
 
             return new ResponseEntity<Object>(map, HttpStatus.CREATED);
+        }
+    }
+
+    public ResponseEntity<Object> getAllVehicles() {
+        List<vehicle> li = repository.findAll();
+
+        if(li.isEmpty()){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("error","No Vehicles Found");
+
+            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
+        }else{
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("success", "All Vehicles");
+            map.put("Data", li);
+
+            return new ResponseEntity<Object>(map, HttpStatus.FOUND);
         }
     }
     
