@@ -35,6 +35,32 @@ public class vehicleService {
         }
     }
 
+    public ResponseEntity<Object> addMultipleVehicle(List<vehicle> vehicles) {
+        for(vehicle vehicle : vehicles){
+            if(repository.existsByVehicleID(vehicle.getVehicleID())){
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("error","Vehicle Already Exists");
+    
+                return new ResponseEntity<Object>(map, HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+        repository.saveAll(vehicles);
+        
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("success", "Vehicle Added Successfully");
+        map.put("Data", vehicles);
+
+        return new ResponseEntity<Object>(map, HttpStatus.CREATED);
+    }
+
+
+
+
+
+
+
+
+
     public ResponseEntity<Object> getAllVehicles() {
         List<vehicle> li = repository.findAll();
 
