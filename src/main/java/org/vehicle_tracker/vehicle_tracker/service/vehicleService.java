@@ -112,5 +112,77 @@ public class vehicleService {
             return new ResponseEntity<Object>(map, HttpStatus.FOUND);
         }
     }
+
+
+
+
+
+
+
+
+
+    public ResponseEntity<Object> deleteById(Long vehicleID) {
+        Optional<vehicle> op = repository.findByVehicleID(vehicleID);
+
+        if(op.isPresent()){
+            repository.deleteById(op.get().getId());
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("success", "Vehicle Deleted Successfully");
+
+            return new ResponseEntity<Object>(map, HttpStatus.OK);
+        }else{
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("error","Vehicle Not Found with the Vehicle ID : " + vehicleID);
+
+            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public ResponseEntity<Object> updateVehicle(Long vehicleID, vehicle vehicle) {
+        Optional<vehicle> op = repository.findByVehicleID(vehicleID);
+
+        if(op.isPresent()){
+            vehicle v = op.get();
+
+            if(vehicle.getMake() != null)
+                v.setMake(vehicle.getMake());
+
+            if(vehicle.getModel() != null)
+                v.setModel(vehicle.getModel());
+
+            if(vehicle.getYear() != null)
+                v.setYear(vehicle.getYear());
+
+            if(vehicle.getStatus() != null)
+                v.setStatus(vehicle.getStatus());
+
+            
+            repository.save(v);
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("success", "Vehicle Updated Successfully");
+            map.put("Data", v);
+
+            return new ResponseEntity<Object>(map, HttpStatus.OK);
+        }else{
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("error","Vehicle Not Found with the Vehicle ID : " + vehicleID);
+
+            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
+        }
+    }
     
 }
